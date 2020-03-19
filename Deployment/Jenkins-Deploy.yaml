@@ -1,0 +1,160 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  labels:
+    app: jenkins
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - args:
+        - --argumentsRealm.passwd.$(ADMIN_USER)=$(ADMIN_PASSWORD)
+        - --argumentsRealm.roles.$(ADMIN_USER)=admin
+        - --httpPort=8080
+        name: jenkins
+        env:
+        - name: JAVA_OPTS
+        - name: JENKINS_OPTS
+        - name: JENKINS_SLAVE_AGENT_PORT
+          value: "50000"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: jenkins-admin-password
+              name: jenkins
+        - name: ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              key: jenkins-admin-user
+              name: jenkins
+        image: frankvhoof/customjenkins:2.226
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 50000
+          name: slavelistener
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/jenkins_config
+          name: jenkins-config
+          readOnly: true
+        - mountPath: /usr/share/jenkins/ref/secrets/
+          name: secrets-dir
+        - mountPath: /usr/share/jenkins/ref/plugins/
+          name: plugin-dir
+        - mountPath: /var/jenkins_home
+          name: jenkins-home
+      dnsConfig: {}
+      dnsPolicy: ClusterFirst
+      initContainers:
+      - command:
+        - sh
+        - /var/jenkins_config/apply_config.sh
+        env:
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: jenkins-admin-password
+              name: jenkins
+        - name: ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              key: jenkins-admin-user
+              name: jenkins
+        image: frankvhoof/customjenkins:2.226
+        imagePullPolicy: Always
+        name: copy-default-config
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /usr/share/jenkins/ref/plugins
+          name: plugins
+        - mountPath: /tmp
+          name: tmp
+        - mountPath: /var/jenkins_config
+          name: jenkins-config
+        - mountPath: /usr/share/jenkins/ref/secrets/
+          name: secrets-dir
+        - mountPath: /var/jenkins_plugins
+          name: plugin-dir
+        - mountPath: /var/jenkins_home
+          name: jenkins-home
+      restartPolicy: Always
+      schedulerName: default-scheduler      
+      securityContext:
+        runAsUser: 0
+      serviceAccount: jenkins
+      serviceAccountName: jenkins
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - emptyDir: {}
+        name: plugins
+      - emptyDir: {}
+        name: tmp
+      - configMap:
+          defaultMode: 420
+          name: jenkins
+        name: jenkins-config
+      - emptyDir: {}
+        name: secrets-dir
+      - emptyDir: {}
+        name: plugin-dir
+      - name: jenkins-home
+        persistentVolumeClaim:
+          claimName: jenkins
