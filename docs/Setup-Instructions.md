@@ -36,6 +36,7 @@
 - Open the [Jenkins-Ingress.yaml](../Deployment/Jenkins-Ingress.yaml) in a text editor
 - Replace the *YOUR_HOST_NAME_HERE*-text with the (full) host for the deployment (e.g. jenkins.mycompany.com)
   - *For the Fontys-Deployment, follow the same naming scheme that rancher uses, replacing the word rancher in the url with a UNIQUE name (globally unique, so don't use 'jenkins').*
+- Do the same for [Jenkins-ConfigMap.yaml](../Deployment/Jenkins-ConfigMap.yaml) (line 137)
 - Save the file
 
 ## Step 4: Deploy Jenkins
