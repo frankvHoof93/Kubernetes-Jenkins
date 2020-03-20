@@ -19,6 +19,7 @@
   - Opening the workload in Rancher and clicking Options (three dots) -> Execute Shell
 
 ## Step 3: Set up the Kubeconfig in the Pod
+**NOTE: IF THE JENKINS MASTER-POD RESTARTS/REDEPLOYS, THE CONFIG-FILE DOES NOT PERSIST. YOU WILL THEN HAVE TO REDO THIS STEP**
 
 - Navigate to the .kube directory: *cd $HOME/.kube*
 - If the .kube directory does not exist yet, you can create it using *mkdir .kube* once inside the $HOME directory

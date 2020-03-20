@@ -11,6 +11,7 @@
 - Save the configuration
 
 ## Step 2: Set the master IP
+**NOTE: IF THE JENKINS MASTER-POD RESTARTS/REDEPLOYS, ITS IP MIGHT CHANGE. YOU WILL THEN HAVE TO REDO THIS STEP**
 
 - Get the IP of the Jenkins-Node, one of two ways:
   - Use *kubectl get pods* and *kubectl describe pod POD_NAME* locally in a shell
