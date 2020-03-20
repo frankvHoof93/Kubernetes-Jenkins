@@ -1,0 +1,28 @@
+# Jenkins Base Slave Image. Latest is NOT used to prevent updates from breaking this Image
+FROM jenkins/jnlp-slave:4.0.1-1
+
+LABEL maintainer "frank_van_hoof@hotmail.com"
+
+# Many of the commands in this file will not run as the Jenkins user. Thus, we switch to the Root-User here
+USER root
+
+# Versions of DotNet to Download
+ENV DOTNET_RUNTIME_VERSION=3.1 \
+    DOTNET_SDK_VERSION=3.1
+
+# Install Dependencies
+RUN apt-get update                                                          && \
+    apt-get install -y --no-install-recommends wget ruby curl apt-transport-https gnupg
+
+# Get repository
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor     \
+        > /etc/apt/trusted.gpg.d/microsoft.gpg                              && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" \
+        > /etc/apt/sources.list.d/dotnetdev.list
+
+# Install Runtime & SDK
+RUN apt-get update															&& \
+    apt-get install -y --no-install-recommends dotnet-runtime-$DOTNET_RUNTIME_VERSION dotnet-sdk-$DOTNET_SDK_VERSION
+
+# Set User to Jenkins
+USER jenkins
