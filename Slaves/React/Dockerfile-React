@@ -1,0 +1,36 @@
+# Jenkins Base Slave Image. Latest is NOT used to prevent updates from breaking this Image
+FROM jenkins/jnlp-slave:4.0.1-1
+
+LABEL maintainer "frank_van_hoof@hotmail.com"
+
+# Many of the commands in this file will not run as the Jenkins user. Thus, we switch to the Root-User here
+USER root
+
+# Versions of Tooling to Download
+ENV NODE_VERSION=12.x 
+# Version 12.16.1 is the latest LTS-version at this time
+
+# Get base dependencies
+RUN apt-get update				&& \
+	apt-get install -y curl
+	
+# Get the Node Install
+RUN curl -sL https://deb.nodesource.com/setup_${NODE_VERSION} | bash
+
+# Install Node and npm
+RUN apt-get update				&& \
+	apt-get install -y nodejs
+
+# Install apt-transport-https for Yarn repository
+RUN apt-get install apt-transport-https -y
+
+# Add Yarn repository
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -	&& \
+	echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# Install Yarn
+RUN apt-get update				&& \
+	apt-get install -y yarn
+
+# Set User to Jenkins
+USER jenkins

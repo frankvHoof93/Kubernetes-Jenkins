@@ -23,6 +23,7 @@
 - Use one of the existing Slave-Images found at the [Jenkins Docker Hub](https://hub.docker.com/u/jenkins) as a build slave.
 - Alternatively, you can build your own, if you have any specific requirements. Make sure to use [jnlp-slave](https://hub.docker.com/r/jenkins/jnlp-slave) as a base.
   - My personal .Net Core 3.1.2 buildslave can be found [here](https://hub.docker.com/repository/docker/frankvhoof/jenkins-dotnet-slave). The Dockerfile for it can be found [here](../Slaves/DotNet/Dockerfile-DotNet)
+  - My personal React buildslave can be found [here](https://hub.docker.com/repository/docker/frankvhoof/jenkins-react-slave). The Dockerfile for it can be found [here](../Slaves/React/Dockerfile-React)
 
 ## Step 4: Add a Pod Template
 

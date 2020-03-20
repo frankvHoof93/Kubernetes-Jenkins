@@ -16,3 +16,5 @@ The [Dockerfile](Dockerfile-Jenkins) has been included to show how the image has
 [Installation Instructions](docs/Setup-Instructions.md)
 
 [Post-Install Instructions](docs/Configuration-Instructions.md)
+
+[Setting up a Build-Slave](docs/Build-Slave-Setup.md)
