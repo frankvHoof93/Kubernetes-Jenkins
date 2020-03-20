@@ -24,7 +24,7 @@
 
 - *Create a new Secret in Rancher (Click Resources->Secrets in the top Menu, then __Add__ __Secret__ )*
   - Scope: Single namespace (Choose the namespace you just created)
-  - Name: Jenkins
+  - Name: jenkins
   - Secrets Values:
     - Key   --						Value
 	- jenkins-admin-user -- admin
@@ -53,3 +53,8 @@
 - You can log in using the username and password that you set up in [step 3](##-step-3:-add-secret)
 
 - *Alternatively, you can go to the website by clicking the 80/http-link under your Workload-name (jenkins) in Rancher*
+
+## Step 6: Update Plugins
+
+- You can now *optionally* update the plugins installed for Jenkins (as well as Jenkins itself) using Jenkins' UI
+  - Plugins should persist upon redeploy of the Jenkins-Pod, as long as the PersistentVolume keeps existing

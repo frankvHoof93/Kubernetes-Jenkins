@@ -47,6 +47,7 @@
   - Set the *Arguments to pass to the command* to: **${computer.jnlpmac} ${computer.name}**
 - Set the **Pod Retention** and the **Time in minutes to retain agent when idle** to preferred values
   - These options allow you to keep a Slave alive (for a while) after the build completes. This can allow you to open a shell to the Slave to check its logs if anything is going wrong.
+  - You can use the default settings **Pod Retention: Default** and **Time in minutes to retain: "" (null)** to start and stop the Pod for each build
 - If you want, you can disable **Show raw yaml in console** to keep the yaml for the Pod from being displayed for every build
 
 ## Step 6: Test the Slave
