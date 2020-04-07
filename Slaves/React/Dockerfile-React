@@ -32,6 +32,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -	&& \
 RUN apt-get update				&& \
 	apt-get install -y yarn
 
+# Install Buildah
 RUN sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_19.10/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
 RUN wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_19.10/Release.key -O Release.key
 RUN apt-key add - < Release.key
@@ -42,5 +43,8 @@ RUN apt-get install runc
 # Set Environment-Variable for npm test
 ENV CI=true
 
+# Set Environment-Variable for Buildah
+ENV BUILDAH_ISOLATION=chroot
+
 # Set User to Jenkins
- USER jenkins
+USER jenkins
