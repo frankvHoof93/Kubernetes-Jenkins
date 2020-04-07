@@ -3,7 +3,7 @@
 # and   PORT = Exposed Port
 
 # Jenkins Base Image. Latest is NOT used to prevent updates from breaking this Image
-FROM jenkins/jenkins:2.226
+FROM jenkins/jenkins:2.230
 
 # Set Maintainer
 LABEL maintainer "frank_van_hoof@hotmail.com"

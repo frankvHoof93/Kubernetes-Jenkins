@@ -23,6 +23,10 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor     \
 # Install Runtime & SDK
 RUN apt-get update															&& \
     apt-get install -y --no-install-recommends dotnet-runtime-$DOTNET_RUNTIME_VERSION dotnet-sdk-$DOTNET_SDK_VERSION
+	
+# Install Runtime & SDK V 2.0 (For Sonar-Scanner)
+RUN apt-get update															&& \
+    apt-get install -y --no-install-recommends dotnet-runtime-2.0 dotnet-sdk-2.0
 
 # Add GenuineTools IMG (for executing Docker commands)
 RUN export IMG_SHA256="41aa98ab28be55ba3d383cb4e8f86dceac6d6e92102ee4410a6b43514f4da1fa" && \

@@ -31,12 +31,16 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -	&& \
 # Install Yarn
 RUN apt-get update				&& \
 	apt-get install -y yarn
-	
-# Add GenuineTools IMG (for executing Docker commands)
-RUN export IMG_SHA256="41aa98ab28be55ba3d383cb4e8f86dceac6d6e92102ee4410a6b43514f4da1fa" && \
-    curl -fSL "https://github.com/genuinetools/img/releases/download/v0.5.7/img-linux-amd64" -o "/usr/local/bin/img" && \
-	echo "${IMG_SHA256}  /usr/local/bin/img" | sha256sum -c - && \
-	chmod a+x "/usr/local/bin/img"
+
+RUN sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_19.10/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+RUN wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_19.10/Release.key -O Release.key
+RUN apt-key add - < Release.key
+RUN apt-get update -qq
+RUN apt-get -qq -y install buildah
+RUN apt-get install runc
+
+# Set Environment-Variable for npm test
+ENV CI=true
 
 # Set User to Jenkins
-USER jenkins
+ USER jenkins
